@@ -1,5 +1,7 @@
 # Stremio CLI
 
+https://github.com/user-attachments/assets/15237b76-7a26-419b-a372-79329934e6cc
+
 A small CLI client for searching Stremio and getting stream links. It uses
 [Television (`tv`)](https://github.com/alexpasmantier/television) for the fuzzy-search TUI.
 
