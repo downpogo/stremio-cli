@@ -1,0 +1,29 @@
+[metadata]
+name = "stremio-titles"
+description = "Search Stremio titles"
+requirements = ["node"]
+
+[source]
+command = 'node "$STREMIO_CLI_ROOT/src/commands/search.ts" "$STREMIO_QUERY"'
+display = "{split:\t:2}  [{split:\t:1}]  {split:\t:3}"
+output = "{}"
+
+[ui]
+input_header = "Select a title"
+
+[ui.remote_control]
+disabled = true
+
+[keybindings]
+enter = "actions:select"
+ctrl-c = "actions:quit-all"
+
+[actions.select]
+description = "Open title"
+command = 'node "$STREMIO_CLI_ROOT/src/tv.ts" title "{split:\t:0}" "{split:\t:1}"'
+mode = "fork"
+
+[actions.quit-all]
+description = "Quit Stremio CLI"
+command = 'node "$STREMIO_CLI_ROOT/src/quit.ts"'
+mode = "execute"

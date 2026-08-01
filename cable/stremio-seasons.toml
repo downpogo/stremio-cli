@@ -1,0 +1,30 @@
+[metadata]
+name = "stremio-seasons"
+description = "Select a season"
+requirements = ["node"]
+
+[source]
+command = 'node "$STREMIO_CLI_ROOT/src/commands/seasons.ts" "$STREMIO_SERIES_ID"'
+display = "{split:\t:1}"
+output = "{}"
+no_sort = true
+
+[ui]
+input_header = "Select a season"
+
+[ui.remote_control]
+disabled = true
+
+[keybindings]
+enter = "actions:select"
+ctrl-c = "actions:quit-all"
+
+[actions.select]
+description = "Open season"
+command = 'node "$STREMIO_CLI_ROOT/src/tv.ts" season "$STREMIO_SERIES_ID" "{split:\t:0}"'
+mode = "fork"
+
+[actions.quit-all]
+description = "Quit Stremio CLI"
+command = 'node "$STREMIO_CLI_ROOT/src/quit.ts"'
+mode = "execute"

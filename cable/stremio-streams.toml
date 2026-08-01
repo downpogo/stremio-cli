@@ -1,0 +1,24 @@
+[metadata]
+name = "stremio-streams"
+description = "Select a stream"
+requirements = ["node"]
+
+[source]
+command = 'node "$STREMIO_CLI_ROOT/src/commands/streams.ts" "$STREMIO_MEDIA_TYPE" "$STREMIO_VIDEO_ID"'
+display = "{split:\t:1}"
+output = "{split:\t:0}"
+no_sort = true
+
+[ui]
+input_header = "Select a stream"
+
+[ui.remote_control]
+disabled = true
+
+[keybindings]
+ctrl-c = "actions:quit-all"
+
+[actions.quit-all]
+description = "Quit Stremio CLI"
+command = 'node "$STREMIO_CLI_ROOT/src/quit.ts"'
+mode = "execute"
