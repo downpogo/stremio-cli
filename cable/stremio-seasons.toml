@@ -4,7 +4,7 @@ description = "Select a season"
 requirements = ["node"]
 
 [source]
-command = 'node "$STREMIO_CLI_ROOT/src/commands/seasons.ts" "$STREMIO_SERIES_ID"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/commands/seasons.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_SERIES_ID"'
 display = "{split:\t:1}"
 output = "{}"
 no_sort = true
@@ -21,10 +21,10 @@ ctrl-c = "actions:quit-all"
 
 [actions.select]
 description = "Open season"
-command = 'node "$STREMIO_CLI_ROOT/src/tv.ts" season "$STREMIO_SERIES_ID" "{split:\t:0}"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/tv.$STREMIO_CLI_RUNTIME_EXTENSION" season "$STREMIO_SERIES_ID" "{split:\t:0}"'
 mode = "fork"
 
 [actions.quit-all]
 description = "Quit Stremio CLI"
-command = 'node "$STREMIO_CLI_ROOT/src/quit.ts"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/quit.$STREMIO_CLI_RUNTIME_EXTENSION"'
 mode = "execute"

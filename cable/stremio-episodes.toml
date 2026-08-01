@@ -4,7 +4,7 @@ description = "Select an episode"
 requirements = ["node"]
 
 [source]
-command = 'node "$STREMIO_CLI_ROOT/src/commands/episodes.ts" "$STREMIO_SERIES_ID" "$STREMIO_SEASON"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/commands/episodes.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_SERIES_ID" "$STREMIO_SEASON"'
 display = "{split:\t:1}  {split:\t:2}"
 output = "{}"
 no_sort = true
@@ -21,10 +21,10 @@ ctrl-c = "actions:quit-all"
 
 [actions.select]
 description = "Open episode"
-command = 'node "$STREMIO_CLI_ROOT/src/tv.ts" episode "{split:\t:0}"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/tv.$STREMIO_CLI_RUNTIME_EXTENSION" episode "{split:\t:0}"'
 mode = "fork"
 
 [actions.quit-all]
 description = "Quit Stremio CLI"
-command = 'node "$STREMIO_CLI_ROOT/src/quit.ts"'
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/quit.$STREMIO_CLI_RUNTIME_EXTENSION"'
 mode = "execute"

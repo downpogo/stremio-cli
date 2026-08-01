@@ -5,14 +5,15 @@
   "packageManager": "pnpm@10.32.1",
   "type": "module",
   "bin": {
-    "stremio-cli": "./src/index.ts",
-    "streamio-cli": "./src/index.ts",
-    "stremio-search": "./src/commands/search.ts",
-    "stremio-seasons": "./src/commands/seasons.ts",
-    "stremio-episodes": "./src/commands/episodes.ts",
-    "stremio-streams": "./src/commands/streams.ts"
+    "stremio-cli": "./dist/index.js",
+    "streamio-cli": "./dist/index.js",
+    "stremio-search": "./dist/commands/search.js",
+    "stremio-seasons": "./dist/commands/seasons.js",
+    "stremio-episodes": "./dist/commands/episodes.js",
+    "stremio-streams": "./dist/commands/streams.js"
   },
   "scripts": {
+    "build": "node scripts/build.mjs",
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },

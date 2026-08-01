@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+import { extname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 function readSearchQuery(args: string[]): string | undefined {
@@ -23,12 +24,16 @@ if (!query) {
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cableDir = fileURLToPath(new URL("../cable", import.meta.url));
+const runtimeDir = fileURLToPath(new URL(".", import.meta.url));
+const runtimeExtension = extname(fileURLToPath(import.meta.url)).slice(1);
 const television = spawn("tv", ["stremio-titles", "--cable-dir", cableDir, "--no-remote"], {
   stdio: "inherit",
   detached: true,
   env: {
     ...process.env,
     STREMIO_CLI_ROOT: root,
+    STREMIO_CLI_RUNTIME_DIR: runtimeDir,
+    STREMIO_CLI_RUNTIME_EXTENSION: runtimeExtension,
     STREMIO_CABLE_DIR: cableDir,
     STREMIO_QUERY: query,
     STREMIO_ROOT_PID: String(process.pid),

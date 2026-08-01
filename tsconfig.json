@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "rootDir": "src",
     "allowImportingTsExtensions": true,
     "strict": true,
     "noEmit": true,
