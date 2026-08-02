@@ -37,14 +37,8 @@ To open the selected stream in a player instead, set `STREMIO_STREAM_COMMAND`.
 The `$` placeholder is replaced with the selected stream URL:
 
 ```dotenv
-STREMIO_STREAM_COMMAND=mpv $
+STREMIO_STREAM_COMMAND='mpv $'
 ```
-
-For example, use `vlc $` to launch VLC. The command runs independently in the
-background, so you can continue using or quit the CLI without stopping it. If
-`STREMIO_STREAM_COMMAND` is unset, selecting a stream continues to print its URL
-to stdout and exit.
-
 ## Run
 
 Run from the TypeScript source during development:
