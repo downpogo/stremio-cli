@@ -15,6 +15,7 @@ execFileSync(
 for (const file of [
   "index.js",
   "tv.js",
+  "stream.js",
   "quit.js",
   "commands/search.js",
   "commands/seasons.js",

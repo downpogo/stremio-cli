@@ -16,7 +16,13 @@ input_header = "Select a stream"
 disabled = true
 
 [keybindings]
+enter = "actions:select"
 ctrl-c = "actions:quit-all"
+
+[actions.select]
+description = "Open stream"
+command = 'node "$STREMIO_CLI_RUNTIME_DIR/stream.$STREMIO_CLI_RUNTIME_EXTENSION" "{split:\t:0}"'
+mode = "fork"
 
 [actions.quit-all]
 description = "Quit Stremio CLI"

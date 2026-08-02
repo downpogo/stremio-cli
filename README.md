@@ -6,7 +6,7 @@ A small CLI client for searching Stremio and getting stream links. It uses
 [Television (`tv`)](https://github.com/alexpasmantier/television) for the fuzzy-search TUI.
 
 Search for a movie or series, select a season and episode when needed, then
-choose a stream. The selected stream URL is printed to stdout.
+choose a stream. By default, the selected stream URL is printed to stdout.
 
 > [!WARNING]
 > Vibecoded slop
@@ -32,6 +32,18 @@ multiple URLs with commas:
 ```dotenv
 STREMIO_ADDONS=https://example.com/manifest.json,https://another.example/manifest.json
 ```
+
+To open the selected stream in a player instead, set `STREMIO_STREAM_COMMAND`.
+The `$` placeholder is replaced with the selected stream URL:
+
+```dotenv
+STREMIO_STREAM_COMMAND=mpv $
+```
+
+For example, use `vlc $` to launch VLC. The command runs independently in the
+background, so you can continue using or quit the CLI without stopping it. If
+`STREMIO_STREAM_COMMAND` is unset, selecting a stream continues to print its URL
+to stdout and exit.
 
 ## Run
 
