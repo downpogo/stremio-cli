@@ -13,7 +13,7 @@ choose a stream. The selected stream URL is printed to stdout.
 
 ## Requirements
 
-- Node.js 22 or newer
+- Node.js 22.13 or newer (for the built-in SQLite cache)
 - [pnpm](https://pnpm.io/)
 - [Television (`tv`)](https://github.com/alexpasmantier/television#installation)
 
@@ -42,6 +42,10 @@ pnpm start -- --search "The Matrix"
 ```
 
 Use `Enter` to select an item and `Ctrl-C` to quit.
+
+Searches, episode metadata, addon manifests, and short-lived stream results are
+cached in SQLite. The database is stored in `$XDG_CACHE_HOME/stremio-cli`, or
+`~/.cache/stremio-cli` when `XDG_CACHE_HOME` is not set.
 
 ## Build
 

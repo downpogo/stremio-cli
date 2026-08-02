@@ -4,7 +4,7 @@ description = "Search Stremio titles"
 requirements = ["node"]
 
 [source]
-command = 'node "$STREMIO_CLI_RUNTIME_DIR/commands/search.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_QUERY"'
+command = 'node --disable-warning=ExperimentalWarning "$STREMIO_CLI_RUNTIME_DIR/commands/search.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_QUERY"'
 display = "{split:\t:2}  [{split:\t:1}]  {split:\t:3}"
 output = "{}"
 

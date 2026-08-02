@@ -1,8 +1,14 @@
 import { loadEnvFile } from "node:process";
 
+import { cachedJson, cacheKey } from "./cache.ts";
+
 const CINEMETA_URL = "https://v3-cinemeta.strem.io";
 const RESULT_LIMIT = 10;
 const STREAM_LIMIT = 30;
+const SEARCH_CACHE_TTL = 12 * 60 * 60 * 1000;
+const EPISODE_CACHE_TTL = 24 * 60 * 60 * 1000;
+const MANIFEST_CACHE_TTL = 24 * 60 * 60 * 1000;
+const STREAM_CACHE_TTL = 10 * 60 * 1000;
 
 export type MediaType = "movie" | "series";
 
@@ -70,14 +76,22 @@ interface StreamResponse {
 }
 
 async function searchCatalog(query: string, type: MediaType): Promise<SearchResult[]> {
-  const url = `${CINEMETA_URL}/catalog/${type}/top/search=${encodeURIComponent(query)}.json`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Cinemeta returned ${response.status} for ${type} search`);
-  }
+  const normalizedQuery = query.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  return cachedJson(
+    `search:${type}:${cacheKey(normalizedQuery)}`,
+    SEARCH_CACHE_TTL,
+    async () => {
+      const url = `${CINEMETA_URL}/catalog/${type}/top/search=${encodeURIComponent(query)}.json`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Cinemeta returned ${response.status} for ${type} search`);
+      }
 
-  const body = (await response.json()) as CatalogResponse;
-  return Array.isArray(body.metas) ? body.metas : [];
+      const body = (await response.json()) as CatalogResponse;
+      return Array.isArray(body.metas) ? body.metas : [];
+    },
+    { staleIfError: true, shouldCache: (results) => results.length > 0 },
+  );
 }
 
 export async function search(query: string): Promise<SearchResult[]> {
@@ -99,18 +113,25 @@ export async function search(query: string): Promise<SearchResult[]> {
 }
 
 export async function fetchEpisodes(id: string): Promise<Episode[]> {
-  const response = await fetch(`${CINEMETA_URL}/meta/series/${encodeURIComponent(id)}.json`);
-  if (!response.ok) {
-    throw new Error(`Cinemeta returned ${response.status} while loading episodes`);
-  }
+  return cachedJson(
+    `episodes:${cacheKey(id)}`,
+    EPISODE_CACHE_TTL,
+    async () => {
+      const response = await fetch(`${CINEMETA_URL}/meta/series/${encodeURIComponent(id)}.json`);
+      if (!response.ok) {
+        throw new Error(`Cinemeta returned ${response.status} while loading episodes`);
+      }
 
-  const body = (await response.json()) as MetaResponse;
-  return (body.meta?.videos ?? []).filter(
-    (video) =>
-      typeof video.id === "string" &&
-      typeof video.season === "number" &&
-      video.season > 0 &&
-      typeof video.episode === "number",
+      const body = (await response.json()) as MetaResponse;
+      return (body.meta?.videos ?? []).filter(
+        (video) =>
+          typeof video.id === "string" &&
+          typeof video.season === "number" &&
+          video.season > 0 &&
+          typeof video.episode === "number",
+      );
+    },
+    { staleIfError: true, shouldCache: (episodes) => episodes.length > 0 },
   );
 }
 
@@ -142,9 +163,16 @@ async function loadAddons(): Promise<Addon[]> {
           throw new Error("URL must end with /manifest.json");
         }
 
-        const response = await fetch(parsedUrl);
-        if (!response.ok) throw new Error(`manifest returned ${response.status}`);
-        const manifest = (await response.json()) as AddonManifest;
+        const manifest = await cachedJson(
+          `manifest:${cacheKey(manifestUrl)}`,
+          MANIFEST_CACHE_TTL,
+          async () => {
+            const response = await fetch(parsedUrl);
+            if (!response.ok) throw new Error(`manifest returned ${response.status}`);
+            return (await response.json()) as AddonManifest;
+          },
+          { staleIfError: true },
+        );
         return { name: manifest.name ?? parsedUrl.hostname, manifestUrl, manifest };
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
@@ -191,10 +219,17 @@ export async function fetchStreams(type: MediaType, id: string): Promise<Playabl
   const responses = await Promise.all(
     addons.map(async (addon) => {
       try {
-        const response = await fetch(streamUrl(addon.manifestUrl, type, id));
-        if (!response.ok) throw new Error(`stream request returned ${response.status}`);
-        const body = (await response.json()) as StreamResponse;
-        return body.streams ?? [];
+        return await cachedJson(
+          `streams:${cacheKey(addon.manifestUrl)}:${type}:${cacheKey(id)}`,
+          STREAM_CACHE_TTL,
+          async () => {
+            const response = await fetch(streamUrl(addon.manifestUrl, type, id));
+            if (!response.ok) throw new Error(`stream request returned ${response.status}`);
+            const body = (await response.json()) as StreamResponse;
+            return body.streams ?? [];
+          },
+          { shouldCache: (streams) => streams.length > 0 },
+        );
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(`Skipping ${addon.name}: ${message}`);

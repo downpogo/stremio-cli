@@ -4,7 +4,7 @@ description = "Select an episode"
 requirements = ["node"]
 
 [source]
-command = 'node "$STREMIO_CLI_RUNTIME_DIR/commands/episodes.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_SERIES_ID" "$STREMIO_SEASON"'
+command = 'node --disable-warning=ExperimentalWarning "$STREMIO_CLI_RUNTIME_DIR/commands/episodes.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_SERIES_ID" "$STREMIO_SEASON"'
 display = "{split:\t:1}  {split:\t:2}"
 output = "{}"
 no_sort = true

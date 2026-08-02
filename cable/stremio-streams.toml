@@ -4,7 +4,7 @@ description = "Select a stream"
 requirements = ["node"]
 
 [source]
-command = 'node "$STREMIO_CLI_RUNTIME_DIR/commands/streams.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_MEDIA_TYPE" "$STREMIO_VIDEO_ID"'
+command = 'node --disable-warning=ExperimentalWarning "$STREMIO_CLI_RUNTIME_DIR/commands/streams.$STREMIO_CLI_RUNTIME_EXTENSION" "$STREMIO_MEDIA_TYPE" "$STREMIO_VIDEO_ID"'
 display = "{split:\t:1}"
 output = "{split:\t:0}"
 no_sort = true
